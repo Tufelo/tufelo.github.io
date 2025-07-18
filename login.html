@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uncovering Kwazulu-Natal Login</title>
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    /* Base body styling with relative positioning */
+    body {
+      font-family: 'Roboto', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Background container with multiple images */
+    #bg-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      width: 200%; /* Container is twice as wide as the viewport */
+      height: 100%;
+      z-index: -1;  /* Behind all content */
+      animation: slowPan 90s linear infinite;
+    }
+    
+    /* Each image fills half of the container -- thus 100% of viewport width */
+    #bg-container img {
+      width: 50%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    /* Animate the container so that it pans smoothly */
+    @keyframes slowPan {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-50%);
+      }
+    }
+    
+    .container {
+      text-align: center;
+      perspective: 1000px;
+      z-index: 1; /* Ensure foreground content appears above the background */
+    }
+    
+    h1 {
+      color: #fff;
+      margin-bottom: 40px;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* 3D login card styling with entrance and pulse animations */
+    .login-card {
+      width: 350px;
+      padding: 40px 30px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease-out;
+      animation: cardEntrance 0.8s forwards, pulseGlow 3s infinite;
+    }
+    
+    @keyframes cardEntrance {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25); }
+      50% { box-shadow: 0 15px 25px rgba(0, 0, 0, 0.35); }
+    }
+    
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Input group with floating label */
+    .input-group {
+      position: relative;
+      margin-bottom: 30px;
+    }
+    
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      outline: none;
+      background: transparent;
+      border-bottom: 2px solid #fff;
+      color: #fff;
+      font-size: 16px;
+    }
+    
+    .input-group label {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      color: #fff;
+      pointer-events: none;
+      transition: top 0.3s ease, font-size 0.3s ease, color 0.3s ease;
+    }
+    
+    .input-group input:focus ~ label,
+    .input-group input:not(:placeholder-shown) ~ label {
+      top: -15px;
+      font-size: 12px;
+      color: #6dd5ed;
+    }
+    
+    /* Button styling with ripple effect */
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #6dd5ed;
+      color: #2193b0;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    button:hover {
+      background-color: #57c1e8;
+    }
+    
+    button:active {
+      transform: scale(0.98);
+    }
+    
+    button::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.5s ease, height 0.5s ease;
+    }
+    
+    button:active::after {
+      width: 200px;
+      height: 200px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Background container with two images (duplicate the same GIF for seamless panning) -->
+  <div id="bg-container">
+    <img src="file:///C:\Users\Tufelo Madlala\Downloads\Capture.PNG" alt="Background GIF 1">
+    <img src="file:///C:\Users\Tufelo Madlala\Downloads\OIP.jpeg" alt="Background GIF 2">
+	<img src="file:///C:\Users\Tufelo Madlala\Desktop\2025\3.webp" alt="Background GIF 1">
+    <img src="file:///C:\Users\Tufelo Madlala\Desktop\2025\44724-Durban.jpg" alt="Background GIF 2">
+  </div>
+  
+  <div class="container">
+    <h1>Uncovering Kwazulu-Natal</h1>
+    <div class="login-card" id="login-card">
+      <form id="login-form">
+        <div class="input-group">
+          <input type="text" id="username" name="username" placeholder=" " required />
+          <label for="username">Username</label>
+        </div>
+        <div class="input-group">
+          <input type="password" id="password" name="password" placeholder=" " required />
+          <label for="password">Password</label>
+        </div>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+  
+  <script>
+    // 3D tilt effect for the login card based on mouse movement
+    const card = document.getElementById('login-card');
+    
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const cardWidth = rect.width;
+      const cardHeight = rect.height;
+      const centerX = rect.left + cardWidth / 2;
+      const centerY = rect.top + cardHeight / 2;
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+      const rotateY = ((mouseX - centerX) / (cardWidth / 2)) * 10;
+      const rotateX = -((mouseY - centerY) / (cardHeight / 2)) * 10;
+      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    });
+    
+    // Handle form submission (replace with your actual authentication logic)
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Login functionality not implemented yet.');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <title>Age & Gender Predictor</title>
+    <style>
+      body { font-family: Arial; padding: 20px; max-width: 600px; margin: auto; }
+      input, button { padding: 8px; font-size: 16px; margin-top: 10px; }
+      #result { margin-top: 20px; font-weight: bold; }
+    </style>
+  </head>
+  <body>
+    <h2>👤 Name Insights</h2>
+    <p>Enter a name to guess their average age and gender (based on global data):</p>
+    
+    <input type="text" id="nameInput" placeholder="e.g. Amanda" />
+    <button onclick="getInfo()">🔍 Predict</button>
+    
+    <p id="result"></p>
+
+    <script>
+      async function getInfo() {
+        const name = document.getElementById("nameInput").value.trim();
+        const result = document.getElementById("result");
+
+        if (!name) {
+          result.textContent = "Please enter a name!";
+          return;
+        }
+
+        result.textContent = "⏳ Fetching data...";
+
+        try {
+          const [ageRes, genderRes] = await Promise.all([
+            fetch(`https://api.agify.io/?name=${name}`).then(res => res.json()),
+            fetch(`https://api.genderize.io/?name=${name}`).then(res => res.json())
+          ]);
+
+          if (ageRes.age || genderRes.gender) {
+            result.textContent = `🧠 Based on global data, "${name}" is usually:\n- Around ${ageRes.age || "unknown"} years old\n- Gender: ${genderRes.gender || "unknown"} (probability: ${Math.round((genderRes.probability || 0) * 100)}%)`;
+          } else {
+            result.textContent = `Not enough data available for "${name}". Try a more common name.`;
+          }
+        } catch (err) {
+          console.error(err);
+          result.textContent = "⚠️ Something went wrong. Check your internet and try again.";
+        }
+      }
+    </script>
+  </body>
+</html>
